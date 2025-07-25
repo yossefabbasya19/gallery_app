@@ -5,11 +5,12 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gallery_app/core/assets_manegers/assets_manegers.dart';
 import 'package:gallery_app/core/di/di.dart';
 import 'package:gallery_app/core/helper/loading_dialog.dart';
-import 'package:gallery_app/core/helper/show_snack_bar.dart';
 import 'package:gallery_app/core/widgets/custom_toggle_switch.dart';
 import 'package:gallery_app/core/view_model/toggle_theme_cubit.dart';
 import 'package:gallery_app/feature/home_screen/data/model/api_response/Photos.dart';
 import 'package:gallery_app/feature/home_screen/presentaion/view_model/home_cubit.dart';
+import 'package:gallery_app/feature/home_screen/presentaion/views/error_screen.dart';
+import 'package:gallery_app/feature/home_screen/presentaion/views/widget/photo_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -32,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   loadPhotos() async {
     await homeCubit.getPhotos(1);
+    homeCubit.loadMoreData();
   }
 
   @override
@@ -49,12 +51,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       ? AssetsManagers.appLogoLight
                       : AssetsManagers.appLogo,
                 ),
-                height: MediaQuery.sizeOf(context).height * 0.05,
+                height: MediaQuery
+                    .sizeOf(context)
+                    .height * 0.05,
               ),
               actions: [
                 SizedBox(
-                  width: MediaQuery.sizeOf(context).width * 0.2,
-                  height: MediaQuery.sizeOf(context).height * 0.038,
+                  width: MediaQuery
+                      .sizeOf(context)
+                      .width * 0.2,
+                  height: MediaQuery
+                      .sizeOf(context)
+                      .height * 0.038,
                   child: CustomToggleSwitch(),
                 ),
                 Padding(padding: EdgeInsetsGeometry.only(right: 12)),
@@ -62,44 +70,47 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             body: BlocConsumer<HomeCubit, HomeState>(
               listener: (context, state) {
-                if (state is GetPhotoFailure) {
-                  showSnackBar(context, state.errorMessage);
-                }
                 if (state is GetPhotoSuccess) {
                   photos.addAll(state.photos);
-                  print(photos);
                 }
               },
               builder: (context, state) {
+                if (state is GetPhotoFailure) {
+                  return ErrorScreen(
+                    message: state.errorMessage,
+                    onRetry: () async {
+                      await homeCubit.getPhotos(1);
+                    },
+                  );
+                }
                 if (state is GetPhotoLoading && photos.isEmpty) {
                   return Center(child: LoadingDialog());
                 }
                 return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: MasonryGridView.count(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 8,
-                      crossAxisSpacing: 8,
-                    itemCount: photos.length,
-                    itemBuilder: (context, index) {
-                      return ClipRRect(
-                        borderRadius: BorderRadiusGeometry.circular(16),
-                        child: CachedNetworkImage(
-                          fit: BoxFit.cover,
-                          imageUrl: photos[index].src!.original!,
-                          placeholder: (context, url) {
-                            return Center(
-                              child: CircularProgressIndicator(
-                                color: Theme.of(context).hintColor,
-                              ),
-                            );
-                          },
-                          fadeInCurve: Curves.easeInBack,
-                          errorWidget: (context, url, error) =>
-                              Container(child: Icon(Icons.error)),
-                        ),
-                      );
-                    },
+                  padding: const EdgeInsets.only(left: 8.0,right: 8.0,top: 8.0),
+                  child: Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: [
+                      MasonryGridView.count(
+                        controller: homeCubit.scrollController,
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 8,
+                        crossAxisSpacing: 8,
+                        itemCount: photos.length,
+                        itemBuilder: (context, index) {
+                          return PhotoCard(
+                            imageUrl: photos[index].src!.large!,
+                            borderRadius: 16,
+                          );
+                        },
+                      ),
+                      homeCubit.paginationLoading ? Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: CircularProgressIndicator(color: Theme
+                            .of(context)
+                            .hintColor,),
+                      ):SizedBox()
+                    ],
                   ),
                 );
               },
