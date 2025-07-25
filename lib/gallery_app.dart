@@ -12,7 +12,6 @@ class GalleryApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ToggleThemeCubit, ToggleThemeState>(
       builder: (context, state) {
-        print(state);
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: MyTheme.lightTheme,
