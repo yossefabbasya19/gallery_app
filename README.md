@@ -8,6 +8,9 @@ A modular Flutter application using Clean Architecture to display a curated list
 
 ### 🟢 Online Mode
 
+**video:**
+![Light Mode](assets/screenshots/Screen_recording_20250726_195918.mp4)
+
 **Light Mode:**
 
 ![Light Mode](assets/screenshots/online_light_mode.png)
