@@ -4,6 +4,8 @@ part of 'home_cubit.dart';
 sealed class HomeState {}
 
 final class HomeInitial extends HomeState {}
+/// connection update
+final class UpdateConnection extends HomeState {}
 /// get photo
 final class GetPhotoSuccess extends HomeState {
   final List<Photos>photos;

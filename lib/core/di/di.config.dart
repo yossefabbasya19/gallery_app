@@ -1,4 +1,3 @@
-// dart format width=80
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
@@ -18,12 +17,16 @@ import '../../feature/home_screen/presentaion/view_model/home_cubit.dart'
     as _i596;
 
 extension GetItInjectableX on _i174.GetIt {
-  // initializes the registration of main-scope dependencies inside of GetIt
+// initializes the registration of main-scope dependencies inside of GetIt
   _i174.GetIt init({
     String? environment,
     _i526.EnvironmentFilter? environmentFilter,
   }) {
-    final gh = _i526.GetItHelper(this, environment, environmentFilter);
+    final gh = _i526.GetItHelper(
+      this,
+      environment,
+      environmentFilter,
+    );
     gh.factory<_i479.HomeRepo>(() => _i202.HomeRepoImple());
     gh.factory<_i596.HomeCubit>(() => _i596.HomeCubit(gh<_i479.HomeRepo>()));
     return this;
