@@ -20,9 +20,9 @@ import 'package:injectable/injectable.dart';
          //var hiveBox = Hive.box<PhotoResponse>(hiveBoxName);
          //await hiveBox.clear();
          await HiveFunction().clearCache();
-         var response = await ApiService.get(
+         var response = await ApiService().getRequest(
            ApiConstance.photosEndPoint,
-           data: {"page": pageNumber, "per_page": 40},
+            {"page": pageNumber, "per_page": 40},
          );
 
          PhotoResponse photoResponse = PhotoResponse.fromJson(response);
@@ -34,6 +34,7 @@ import 'package:injectable/injectable.dart';
          return Right(HiveFunction().getData);
        }
      } on Exception catch (e) {
+       print(e);
        if (e is DioException) {
          return Left(ServerFailure.fromDioException(e));
        }

@@ -1,22 +1,28 @@
 import 'package:dio/dio.dart';
-import 'package:gallery_app/core/api_service/api_constance.dart';
+import 'package:retrofit/retrofit.dart';
 
+part 'api_service.g.dart';
+
+@RestApi(baseUrl: 'https://api.pexels.com/v1/')
 abstract class ApiService {
-  static Dio dio = Dio(BaseOptions(baseUrl: ApiConstance.baseUrl));
-
-  static Map<String, String> getHeaders()  {
-    return {
-      "Authorization":
-          "LHCXie33Q67d5HBQLEuiB9Hc05zwf2AvU4EQgonSPROI4LDSEzZAOPzQ",
-    };
+  factory ApiService() {
+    final dio = Dio(BaseOptions(
+      baseUrl: 'https://api.pexels.com/v1/',
+      headers: getHeaders(), // define below
+    ));
+    return _ApiService(dio);
   }
 
-  static Future get(String endPoint, {Map<String, dynamic>? data}) async {
-    var response = await dio.get(
-      endPoint,
-      queryParameters: data,
-      options: Options(headers: getHeaders()),
-    );
-    return response.data;
-  }
+  @GET("{endPoint}")
+  Future<dynamic> getRequest(
+      @Path("endPoint") String endPoint,
+      @Queries() Map<String, dynamic>? queryParams,
+      );
+}
+
+Map<String, String> getHeaders() {
+  return {
+    'Authorization': 'LHCXie33Q67d5HBQLEuiB9Hc05zwf2AvU4EQgonSPROI4LDSEzZAOPzQ',
+    'Accept': 'application/json',
+  };
 }
