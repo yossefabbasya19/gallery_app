@@ -1,34 +1,37 @@
 import 'package:hive/hive.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 part 'src.g.dart';
 
 @HiveType(typeId: 1)
+@JsonSerializable()
 class Src extends HiveObject {
   @HiveField(0)
-  String? original;
+  final String? original;
 
   @HiveField(1)
-  String? large2x;
+  @JsonKey(name: 'large2x')
+  final String? large2x;
 
   @HiveField(2)
-  String? large;
+  final String? large;
 
   @HiveField(3)
-  String? medium;
+  final String? medium;
 
   @HiveField(4)
-  String? small;
+  final String? small;
 
   @HiveField(5)
-  String? portrait;
+  final String? portrait;
 
   @HiveField(6)
-  String? landscape;
+  final String? landscape;
 
   @HiveField(7)
-  String? tiny;
+  final String? tiny;
 
-  Src({
+   Src({
     this.original,
     this.large2x,
     this.large,
@@ -39,25 +42,7 @@ class Src extends HiveObject {
     this.tiny,
   });
 
-  factory Src.fromJson(Map<String, dynamic> json) => Src(
-    original: json['original'],
-    large2x: json['large2x'],
-    large: json['large'],
-    medium: json['medium'],
-    small: json['small'],
-    portrait: json['portrait'],
-    landscape: json['landscape'],
-    tiny: json['tiny'],
-  );
+  factory Src.fromJson(Map<String, dynamic> json) => _$SrcFromJson(json);
 
-  Map<String, dynamic> toJson() => {
-    'original': original,
-    'large2x': large2x,
-    'large': large,
-    'medium': medium,
-    'small': small,
-    'portrait': portrait,
-    'landscape': landscape,
-    'tiny': tiny,
-  };
+  Map<String, dynamic> toJson() => _$SrcToJson(this);
 }

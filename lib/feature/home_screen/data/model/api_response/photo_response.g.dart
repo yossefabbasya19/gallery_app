@@ -54,3 +54,29 @@ class PhotoResponseAdapter extends TypeAdapter<PhotoResponse> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+PhotoResponse _$PhotoResponseFromJson(Map<String, dynamic> json) =>
+    PhotoResponse(
+      page: (json['page'] as num?)?.toInt(),
+      perPage: (json['per_page'] as num?)?.toInt(),
+      photos: (json['photos'] as List<dynamic>?)
+          ?.map((e) => Photos.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      totalResults: (json['total_results'] as num?)?.toInt(),
+      nextPage: json['next_page'] as String?,
+      prevPage: json['prev_page'] as String?,
+    );
+
+Map<String, dynamic> _$PhotoResponseToJson(PhotoResponse instance) =>
+    <String, dynamic>{
+      'page': instance.page,
+      'per_page': instance.perPage,
+      'photos': instance.photos?.map((e) => e.toJson()).toList(),
+      'total_results': instance.totalResults,
+      'next_page': instance.nextPage,
+      'prev_page': instance.prevPage,
+    };

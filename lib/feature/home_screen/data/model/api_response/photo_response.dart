@@ -1,29 +1,35 @@
 import 'package:hive/hive.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'photos.dart';
 
 part 'photo_response.g.dart';
 
 @HiveType(typeId: 3)
+@JsonSerializable(explicitToJson: true)
 class PhotoResponse extends HiveObject {
   @HiveField(0)
-  int? page;
+  final int? page;
 
   @HiveField(1)
-  int? perPage;
+  @JsonKey(name: 'per_page')
+  final int? perPage;
 
   @HiveField(2)
-  List<Photos>? photos;
+  final List<Photos>? photos;
 
   @HiveField(3)
-  int? totalResults;
+  @JsonKey(name: 'total_results')
+  final int? totalResults;
 
   @HiveField(4)
-  String? nextPage;
+  @JsonKey(name: 'next_page')
+  final String? nextPage;
 
   @HiveField(5)
-  String? prevPage;
+  @JsonKey(name: 'prev_page')
+  final String? prevPage;
 
-  PhotoResponse({
+   PhotoResponse({
     this.page,
     this.perPage,
     this.photos,
@@ -32,23 +38,8 @@ class PhotoResponse extends HiveObject {
     this.prevPage,
   });
 
-  factory PhotoResponse.fromJson(Map<String, dynamic> json) => PhotoResponse(
-    page: json['page'],
-    perPage: json['per_page'],
-    photos: (json['photos'] as List?)
-        ?.map((v) => Photos.fromJson(v))
-        .toList(),
-    totalResults: json['total_results'],
-    nextPage: json['next_page'],
-    prevPage: json['prev_page'],
-  );
+  factory PhotoResponse.fromJson(Map<String, dynamic> json) =>
+      _$PhotoResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => {
-    'page': page,
-    'per_page': perPage,
-    'photos': photos?.map((e) => e.toJson()).toList(),
-    'total_results': totalResults,
-    'next_page': nextPage,
-    'prev_page': prevPage,
-  };
+  Map<String, dynamic> toJson() => _$PhotoResponseToJson(this);
 }

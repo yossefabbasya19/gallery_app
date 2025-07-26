@@ -1,44 +1,49 @@
 import 'package:hive/hive.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'src.dart';
 
 part 'photos.g.dart';
 
 @HiveType(typeId: 2)
+@JsonSerializable(explicitToJson: true)
 class Photos extends HiveObject {
   @HiveField(0)
-  int? id;
+  final int? id;
 
   @HiveField(1)
-  int? width;
+  final int? width;
 
   @HiveField(2)
-  int? height;
+  final int? height;
 
   @HiveField(3)
-  String? url;
+  final String? url;
 
   @HiveField(4)
-  String? photographer;
+  final String? photographer;
 
   @HiveField(5)
-  String? photographerUrl;
+  @JsonKey(name: 'photographer_url')
+  final String? photographerUrl;
 
   @HiveField(6)
-  int? photographerId;
+  @JsonKey(name: 'photographer_id')
+  final int? photographerId;
 
   @HiveField(7)
-  String? avgColor;
+  @JsonKey(name: 'avg_color')
+  final String? avgColor;
 
   @HiveField(8)
-  Src? src;
+  final Src? src;
 
   @HiveField(9)
-  bool? liked;
+  final bool? liked;
 
   @HiveField(10)
-  String? alt;
+  final String? alt;
 
-  Photos({
+   Photos({
     this.id,
     this.width,
     this.height,
@@ -52,31 +57,7 @@ class Photos extends HiveObject {
     this.alt,
   });
 
-  factory Photos.fromJson(Map<String, dynamic> json) => Photos(
-    id: json['id'],
-    width: json['width'],
-    height: json['height'],
-    url: json['url'],
-    photographer: json['photographer'],
-    photographerUrl: json['photographer_url'],
-    photographerId: json['photographer_id'],
-    avgColor: json['avg_color'],
-    src: json['src'] != null ? Src.fromJson(json['src']) : null,
-    liked: json['liked'],
-    alt: json['alt'],
-  );
+  factory Photos.fromJson(Map<String, dynamic> json) => _$PhotosFromJson(json);
 
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'width': width,
-    'height': height,
-    'url': url,
-    'photographer': photographer,
-    'photographer_url': photographerUrl,
-    'photographer_id': photographerId,
-    'avg_color': avgColor,
-    'src': src?.toJson(),
-    'liked': liked,
-    'alt': alt,
-  };
+  Map<String, dynamic> toJson() => _$PhotosToJson(this);
 }
