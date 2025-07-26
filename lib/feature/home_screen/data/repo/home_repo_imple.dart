@@ -6,6 +6,7 @@ import 'package:gallery_app/core/api_service/api_service.dart';
 import 'package:gallery_app/core/check_connection/check_connection.dart';
 import 'package:gallery_app/core/failure/failure.dart';
 import 'package:gallery_app/core/hive/hive_function.dart';
+import 'package:gallery_app/feature/home_screen/data/data_source/home_data_source.dart';
 import 'package:gallery_app/feature/home_screen/data/model/api_response/photo_response.dart';
 import 'package:gallery_app/feature/home_screen/data/repo/home_repo.dart';
 import 'package:gallery_app/main.dart';
@@ -15,13 +16,16 @@ import 'package:injectable/injectable.dart';
 @Injectable(as: HomeRepo)
 class HomeRepoImple extends HomeRepo {
   @factoryMethod
-  HomeRepoImple();
-
+  HomeRepoImple(this.homeDataSource);
+  final HomeDataSource homeDataSource;
 
 
   @override
   Future<Either<Failure, PhotoResponse>> getPhoto(int pageNumber) async {
-    try {
+    return await homeDataSource.getPhoto(pageNumber);
+  }
+}
+/*try {
       bool isConnected = await CheckConnection().checkNetwork();
       if (isConnected) {
         //var hiveBox = Hive.box<PhotoResponse>(hiveBoxName);
@@ -47,6 +51,4 @@ class HomeRepoImple extends HomeRepo {
       return Left(
         ServerFailure(errorMessage: "unknown error , try access later"),
       );
-    }
-  }
-}
+    }*/

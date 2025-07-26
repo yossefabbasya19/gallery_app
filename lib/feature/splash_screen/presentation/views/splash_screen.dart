@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gallery_app/core/assets_manegers/assets_manegers.dart';
+import 'package:gallery_app/core/di/di.dart';
 import 'package:gallery_app/core/my_routes/my_routes.dart';
 import 'package:gallery_app/core/view_model/toggle_theme_cubit.dart';
+import 'package:gallery_app/feature/splash_screen/presentation/view_model/splash_cubit.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -12,11 +14,11 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  late SplashCubit splashCubit;
   @override
   void initState() {
-    Future.delayed(Duration(seconds: 3), () {
-      Navigator.pushReplacementNamed(context, MyRoutes.homeScreen);
-    });
+    splashCubit = getIt<SplashCubit>();
+    splashCubit.navigation(context);
     super.initState();
   }
 
