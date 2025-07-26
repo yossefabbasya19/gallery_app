@@ -1,16 +1,17 @@
-# gallery_app
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Photo List Screen (Online - Light Mode):
+![Light Mode](assets/screenshots/online_light_mode.png)
+Photo List Screen (Online - Dark Mode):
+![Dark Mode](assets/screenshots/online_dark_mode.png)
+Photo List Screen (Offline/Cached - Light Mode):
+![Light Mode](assets/screenshots/offline_light_mode.png)
+Photo List Screen (Offline/Cached - Dark Mode):
+![Dark Mode](assets/screenshots/offline-dark_mode.png)
+Loading State:
+![Dark Mode](assets/screenshots/loading_indicator_dark.png)
+![Light Mode](assets/screenshots/loading_indicator_light.png)
+Error State:
+![Dark Mode](assets/screenshots/error_handler_dark.png)
+![Light Mode](assets/screenshots/error_handler_light.png)
+Network Status Indicator:
+![Dark Mode](assets/screenshots/network_indicator.png)
+![Light Mode](assets/screenshots/network_indicator_light.png)
