@@ -1,93 +1,165 @@
-Photo List Screen (Online - Light Mode):
+# 📸 Flutter Photo Gallery App
+
+A modular Flutter application using Clean Architecture to display a curated list of photos with offline support, light/dark themes, and loading/error states.
+
+---
+
+## 📷 Screenshots
+
+### 🟢 Online Mode
+
+**Light Mode:**
+
 ![Light Mode](assets/screenshots/online_light_mode.png)
-Photo List Screen (Online - Dark Mode):
+
+**Dark Mode:**
+
 ![Dark Mode](assets/screenshots/online_dark_mode.png)
-Photo List Screen (Offline/Cached - Light Mode):
+
+### 🔴 Offline (Cached) Mode
+
+**Light Mode:**
+
 ![Light Mode](assets/screenshots/offline_light_mode.png)
-Photo List Screen (Offline/Cached - Dark Mode):
+
+**Dark Mode:**
+
 ![Dark Mode](assets/screenshots/offline-dark_mode.png)
-Loading State:
+
+### 🔄 Loading State
+
 ![Dark Mode](assets/screenshots/loading_indicator_dark.png)
 ![Light Mode](assets/screenshots/loading_indicator_light.png)
-Error State:
+
+### ❌ Error State
+
 ![Dark Mode](assets/screenshots/error_handler_dark.png)
 ![Light Mode](assets/screenshots/error_handler_light.png)
-Network Status Indicator:
+
+### 📡 Network Status Indicator
+
 ![Dark Mode](assets/screenshots/network_indicator.png)
 ![Light Mode](assets/screenshots/network_indicator_light.png)
 
-/lib
-├── /core                      ← Shared app logic
-│   ├── /api_service           ← API integration layer
-│   │   ├── api_service.dart   ← Wrapper for HTTP (e.g., Dio)
-│   │   └── api_constants.dart ← Base URLs, paths, headers
-│   ├── /network               ← Internet connection checker
-│   │   └── connection_checker.dart
-│   ├── /constants             ← Shared constant values
-│   ├── /theme                 ← App themes (light/dark)
-│   ├── /assets                ← Asset path constants
-│   ├── /di                   ← Dependency injection setup (e.g., GetIt)
-│   ├── /routes                ← Navigation and route names
-│   ├── /widgets               ← Custom reusable UI widgets
-│   ├── /helpers               ← Utility functions
-│   └── /failure               ← Error handling (Failure, Exception classes)
-│   └── /hive               ← Error handling (Failure, Exception classes)
-│   └── /view_model               ← Error handling (Failure, Exception classes)
+---
 
-└── /feature                   ← Modular features (screens)
+## 🧱 Project Structure
+
+```
+/lib
+├── /core
+│   ├── /api_service           → API service and constants
+│   ├── /network               → Internet connection checking
+│   ├── /constants             → Shared constant values
+│   ├── /theme                 → Light/Dark theme configs
+│   ├── /assets                → Asset path references
+│   ├── /di                    → Dependency injection (GetIt + Injectable)
+│   ├── /routes                → Named routes for navigation
+│   ├── /widgets               → Reusable custom widgets
+│   ├── /helpers               → Helper functions
+│   ├── /failure               → App-wide failure/error types
+│   ├── /hive                  → Hive-related utilities (optional)
+│   └── /view_model            → Shared or core-level view models (optional)
+│
+└── /feature
     ├── /splash
     │   └── /presentation
-    │       ├── /view          ← splash_screen.dart
-    │       └── /view_model    ← splash_view_model.dart
+    │       ├── /view          → splash_screen.dart
+    │       └── /view_model    → splash_view_model.dart
     │
     └── /home
         ├── /data
-        │   ├── /models        ← Dart models (e.g., Photo)
-        │   ├── /repo          ← Repository implementations
-        │   └── /data_source   ← Remote/local data fetching
+        │   ├── /models        → Data models (e.g., Photo)
+        │   ├── /repo          → Repository implementations
+        │   └── /data_source   → API/Hive data sources
         └── /presentation
-            ├── /view          ← UI screens and widgets
-            └── /view_model    ← State management and logic
-Clean Architecture Layer Responsibilities
-    feature folder :
-        1. Presentation Layer
-           Location: /feature/home_screen/presentation/
-           Location: /feature/splash_screen/presentation/
-        
-            /view: Flutter widgets and screens — shows data to the user.
-            
-            /view_model: Manages UI state and business logic, and calls repositories.
-            
-            !- Presentation layer does not access APIs or databases directly.
-        2. Data Layer
-           Location: /feature/home_screen/data/
-        
-            /models: Data classes (e.g., Photo, User) used to parse JSON or DB data.
-            
-            /data_source: Communicates with external sources (e.g., API, Hive DB).
-            
-            /repo: Implements a repository that decides where data should come from (API or local).
-                   and contain feature functions 
-            
-            !- Repositories act as a middleman between ViewModels and raw data sources.
-    core folder:
-        1. Core Layer
-           Location: /core/
-        
-            Shared and reusable code.
-            
-            Example folders:
-            
-            api_service/: API calls and base URL definitions.
-            
-            network/: Internet connectivity checks.
-            
-            failure/: Standardized error handling.
-            
-            di/: Dependency injection (e.g., GetIt registration).
-            
-            routes/, widgets/, helpers/: Support navigation and UI.
-o Documentation on how to set up and run the project locally, including any necessary 
-flutter pub get or flutter pub run build_runner commands, and any other important setup steps.
-    o flutter pub get => to get  dependencies
-    o flutter pub run build_runner build --delete-conflicting-outputs => Generate all injectable & hive code
+            ├── /view_model    → Logic and state management
+            └── /view          → UI widgets and screens
+```
+
+---
+
+## 🧠 Clean Architecture Overview
+
+### 🧩 Feature Layer
+
+Each feature (e.g., `home`, `splash`) includes:
+
+#### 1. Presentation Layer
+- **Location:** `/feature/[feature_name]/presentation/`
+- **/view:** Displays UI (Flutter widgets)
+- **/view_model:** Handles business logic and state (uses repository)
+
+> ❗ Presentation does **not** directly call APIs or databases.
+
+#### 2. Data Layer
+- **Location:** `/feature/[feature_name]/data/`
+- **/models:** Dart models (e.g., `Photo`)
+- **/data_source:** Handles remote (Dio) or local (Hive) access
+- **/repo:** Abstracts data source access and provides feature logic
+
+> 🧠 Repositories act as a **middleman** between ViewModels and raw data sources.
+
+---
+
+### 🛠 Core Layer
+
+**Location:** `/core/`  
+Contains shared services, constants, and utilities:
+
+| Folder             | Purpose                                 |
+|--------------------|------------------------------------------|
+| `api_service/`      | Handles Dio HTTP requests + constants   |
+| `network/`          | Checks internet connectivity            |
+| `di/`               | Sets up dependency injection            |
+| `failure/`          | Defines app-wide error handling         |
+| `routes/`           | Global route management                 |
+| `widgets/`, `helpers/` | Shared UI and utility functions     |
+
+---
+
+## 🚀 Getting Started (Local Setup)
+
+Follow these steps to set up and run the project locally:
+
+### 🔹 1. Install dependencies
+
+```bash
+flutter pub get
+```
+
+### 🔹 2. Run code generation
+
+Generates all `injectable`, `hive`, and `build_runner`-based files:
+
+```bash
+flutter pub run build_runner build --delete-conflicting-outputs
+```
+
+### 🔹 3. Run the app
+
+```bash
+flutter run
+```
+
+> ✅ Make sure Hive is initialized in `main.dart` and all adapters are registered.
+
+---
+
+## 📦 Tech Stack
+
+- `flutter_bloc` for state management
+- `injectable` + `get_it` for DI
+- `hive` for local cache
+- `dio` for network calls
+- `dartz` for functional error handling
+- `connectivity_plus` for network checks
+
+---
+
+## 📌 Notes
+
+- All layers are **loosely coupled** and follow **Clean Architecture**.
+- Adding a new feature is as simple as creating a new `/feature/xyz` module with `data` and `presentation`.
+
+---
