@@ -17,26 +17,22 @@ class HomeCubit extends Cubit<HomeState> {
   HomeCubit(this.homeRepo) : super(HomeInitial());
   final HomeRepo homeRepo;
   ScrollController scrollController = ScrollController();
-  late PhotoResponse photoResponse;
+   PhotoResponse? photoResponse;
   bool paginationLoading = false;
-  int pageNumber = 1;
+  int pageNumber = 2;
   late bool connection = true;
 
   void listenToNetwork() {
     Connectivity().onConnectivityChanged.listen((event) {
       if (event.contains(ConnectivityResult.none)) {
         connection = false;
-        emit(UpdateConnection());
       } else {
         connection = true;
-        emit(UpdateConnection());
-
       }
     });
   }
 
   Future<void> getPhotos(int pageNumber) async {
-    print(connection);
     emit(GetPhotoLoading());
     var result = await homeRepo.getPhoto(pageNumber);
     result.fold(
@@ -50,8 +46,8 @@ class HomeCubit extends Cubit<HomeState> {
     );
   }
 
-  void loadMoreData() async {
-    if (photoResponse.nextPage != null) {
+   Future<void> loadMoreData() async {
+    if (photoResponse!.nextPage != null) {
       scrollController.addListener(() async {
         if (scrollController.position.atEdge) {
           if (scrollController.position.pixels == 0) {

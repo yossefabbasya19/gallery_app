@@ -1,8 +1,9 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:gallery_app/core/app_color/app_colors.dart';
 import 'package:gallery_app/core/assets_manegers/assets_manegers.dart';
-import 'package:gallery_app/core/check_connection/check_connection.dart';
 import 'package:gallery_app/core/di/di.dart';
 import 'package:gallery_app/core/helper/loading_dialog.dart';
 import 'package:gallery_app/core/widgets/custom_toggle_switch.dart';
@@ -10,6 +11,7 @@ import 'package:gallery_app/core/view_model/toggle_theme_cubit.dart';
 import 'package:gallery_app/feature/home_screen/data/model/api_response/photos.dart';
 import 'package:gallery_app/feature/home_screen/presentaion/view_model/home_cubit.dart';
 import 'package:gallery_app/feature/home_screen/presentaion/views/error_screen.dart';
+import 'package:gallery_app/feature/home_screen/presentaion/views/widget/connection_panner.dart';
 import 'package:gallery_app/feature/home_screen/presentaion/views/widget/photo_card.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late HomeCubit homeCubit;
   List<Photos> photos = [];
   int? nullableValue = 0;
+
   //bool isConnectNetwork = true;
 
   @override
@@ -32,11 +35,29 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
+  late bool connection = true;
+
   loadPhotos() async {
-    homeCubit.listenToNetwork();
     //isConnectNetwork = await CheckConnection().checkNetwork();
-    await homeCubit.getPhotos(1);
-    homeCubit.loadMoreData();
+    await homeCubit.getPhotos(2);
+    homeCubit.listenToNetwork();
+    listenToNetwork();
+  }
+
+  void listenToNetwork() {
+    Connectivity().onConnectivityChanged.listen((event) {
+      if (event.contains(ConnectivityResult.none)) {
+        connection = false;
+        setState(() {
+          print(connection);
+        });
+      } else {
+        connection = true;
+        setState(() {
+          print(connection);
+        });
+      }
+    });
   }
 
   @override
@@ -66,22 +87,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Padding(padding: EdgeInsetsGeometry.only(right: 12)),
                   ],
-                  bottom: homeCubit.connection
-                      ? null
-                      : PreferredSize(
-                          preferredSize: Size(double.infinity, 50),
-                          child: Container(
-                            child: Text(
-                              "لا يوجد اتصال بالإنترنت",
-                              style: Theme.of(context).textTheme.labelMedium,
-                            ),
-                          ),
-                        ),
+                  bottom: connection ? null : ConnectionPanner(),
                 ),
                 body: BlocConsumer<HomeCubit, HomeState>(
-                  listener: (context, state) {
+                  listener: (context, state) async{
                     if (state is GetPhotoSuccess) {
                       photos.addAll(state.photos);
+                      await homeCubit.loadMoreData();
                     }
                   },
                   builder: (context, state) {
@@ -89,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       return ErrorScreen(
                         message: state.errorMessage,
                         onRetry: () async {
-                          await homeCubit.getPhotos(1);
+                          await homeCubit.getPhotos(2);
                         },
                       );
                     }
