@@ -163,3 +163,72 @@ flutter run
 - Adding a new feature is as simple as creating a new `/feature/xyz` module with `data` and `presentation`.
 
 ---
+## 📲 Gallery App – Full App Flow Description
+
+This document outlines the full data flow of the Gallery App. The app supports both online and offline image browsing using the Pexels API and Hive for local caching. It also includes a splash screen, error handling, and clean architecture principles.
+
+---
+
+### 1. Splash Screen
+
+- When the app launches, it first displays a **splash screen**.
+- The splash screen remains visible for **3 seconds**.
+- After the delay, the app navigates automatically to the **Home Screen**.
+
+---
+
+### 2. Home Screen – Initial Load
+
+- Upon entering the Home Screen, the app shows a **loading indicator** while performing setup tasks.
+- These tasks are managed by a ViewModel (or Controller), which starts the image-fetching process.
+
+---
+
+### 3. Network Connection Check
+
+- The app checks for internet availability using the `connectivity_plus` package.
+- Based on the result, the app determines whether to fetch data from the remote API or load it from local storage.
+
+---
+
+### 4. Fetching Photo Data
+
+#### If the device is **online**:
+- The app calls the remote data source to **fetch images from the Pexels API**.
+- After fetching, it parses and converts the data into model objects.
+- The fetched data is also **cached in Hive** for offline access in future sessions.
+- The app then displays the images on the UI.
+
+#### If the device is **offline**:
+- The app attempts to **load previously cached data from Hive**.
+- If data is available in Hive, it is displayed on the UI.
+
+---
+
+### 5. Error Handling
+
+- If an error occurs during:
+    - API request
+    - Hive read/write
+    - Data parsing
+- The app **navigates to an error screen**.
+- The error screen displays a user-friendly message and may offer retry options.
+
+---
+
+### 6. Displaying Photos
+
+- If data fetching (from API or Hive) is successful:
+    - The ViewModel updates its state.
+    - The UI listens to the ViewModel and displays a **grid of images** using a layout like `GridView`.
+
+---
+
+### Summary
+
+- The app starts with a 3-second splash screen.
+- The Home Screen checks for internet connectivity.
+- If connected, it fetches data from the API and caches it locally.
+- If offline, it loads data from the Hive cache.
+- If any step fails, the app navigates to a dedicated error screen.
+- Throughout this process, the app uses a loading indicator to provide feedback to the user.
