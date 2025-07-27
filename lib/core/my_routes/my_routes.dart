@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gallery_app/feature/home_screen/presentaion/views/home_screen.dart';
-import 'package:gallery_app/feature/home_screen/presentaion/views/widget/display_image.dart';
+import 'package:gallery_app/feature/display_image/presentation/views/display_image.dart';
 
 abstract class MyRoutes {
   static const String homeScreen = "/homeScreen";
