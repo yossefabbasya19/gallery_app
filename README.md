@@ -66,7 +66,7 @@ A modular Flutter application using Clean Architecture to display a curated list
     │   └── /presentation
     │       ├── /view          → splash_screen.dart
     │       └── /view_model    → splash_view_model.dart
-    │   /display_image
+    │── /display_image
     │   └── /presentation
     │       ├── /view          → display_imagen.dart    
     └── /home
